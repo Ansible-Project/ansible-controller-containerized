@@ -1,0 +1,14 @@
+### Ansible ###
+*.retry
+
+# Ansible runtime and backups
+*.original
+*.tmp
+*.bkp
+*.*~
+
+# Avoid plain-text passwords
+*pwd*
+*pass*
+*password*
+*.txt
