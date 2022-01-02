@@ -1,17 +1,5 @@
-FROM adoptopenjdk:11-jre-hotspot
+FROM ghcr.io/ansible-project/ansible-controller-containerized:main
 
-RUN apt-get -y update && apt-get -y install ssh locate sshpass nano mkisofs sudo adduser tar mount fdisk iputils-ping net-tools apt-utils rsync vim telnet moreutils iproute2  && apt-get clean
+RUN git clone --depth 1 -b devel --single-branch https://github.com/dell/dellemc-openmanage-ansible-modules.git && cd dellemc-openmanage-ansible-modules && python3 install.py
 
-RUN apt-get -qq -y update && apt-get install -y git python3-pip && apt-get clean
-
-RUN rm -rf /usr/share/man/
-
-RUN ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
-
-RUN pip3 install --no-cache-dir pip ansible==2.9.6 --upgrade
-
-RUN ln -s /usr/bin/python3 /usr/bin/python
-
-ENV ANSIBLE_HOST_KEY_CHECKING=False
-
-RUN pip3 install --no-cache-dir jinja2==2.11.1 netaddr==0.7.19 pbr==5.4.4 jmespath==0.9.5 ruamel.yaml==0.16.10
+RUN git clone --depth 1 https://github.com/dell/omsdk.git && cd omsdk && pip3 install --no-cache-dir -r requirements-python3x.txt && sh build.sh 1.2 423 &&  cd dist && pip3 install omsdk-1.2.423-py2.py3-none-any.whl
